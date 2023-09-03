@@ -1,0 +1,5 @@
+﻿sitename,FeedURL,Category
+テストサイト名1,https://testsite1.co.jp/rss/2.0/ait_smart.xml,テストカテゴリー1
+テストサイト名2,https://testsite2.com/feed,TESTCATEGORY1
+テストサイト名3,http://testsite4.co.jp/rss/index.rdf,テストカテゴリー2
+テストサイト名5,https://rss.testsite5.co.jp/rss/2.0/ait_db.xml,テストカテゴリ3
