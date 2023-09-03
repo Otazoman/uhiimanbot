@@ -11,7 +11,7 @@ mongo6.0
 ```
 $ git config --global url."https://".insteadOf git://
 $ pyenv update
-pyenv install $(pyenv install -l | grep -v '[a-zA-Z]' | grep -e '\s3\.?*' | tail -1)
+$ pyenv install $(pyenv install -l | grep -v '[a-zA-Z]' | grep -e '\s3\.?*' | tail -1)
 ```
 
 ##  app install
@@ -79,9 +79,9 @@ $ mongosh
   user: "yourusername",
   pwd: "yourpassword",
   roles: [
-   { role: "userAdmin", db: "cr_tohonokai" },
-   { role: "dbAdmin", db: "cr_tohonokai" },
-   { role: "readWrite", db: "cr_tohonokai" }
+   { role: "userAdmin", db: "yourcollection" },
+   { role: "dbAdmin", db: "yourcollection" },
+   { role: "readWrite", db: "yourcollection" }
   ]
  }
 );
