@@ -80,7 +80,7 @@ class TestLabelandSummaryDocument(TestCase):
                 "updated": "2023-06-18 02:17:48",
                 "_id": "20230618172417-1",
                 "addlabel": ["pixel", "android", "authority"],
-                "summary": ["pixel", "android", "authority"],
+                "summary": "pixel,android,authority",
                 "labelstat": "added",
             },
             {
@@ -94,7 +94,7 @@ class TestLabelandSummaryDocument(TestCase):
                 "updated": "2023-06-18 01:38:21",
                 "_id": "20230618172417-92",
                 "addlabel": ["iosipadosmacossonoma", "macos", "macrumors"],
-                "summary": ["iosipadosmacossonoma", "macos", "macrumors"],
+                "summary": "iosipadosmacossonoma,macos,macrumors",
                 "labelstat": "added",
             },
         ]

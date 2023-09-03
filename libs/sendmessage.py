@@ -130,7 +130,6 @@ class SendMessage:
 
         headers = {"Authorization": "Bearer " + self.slackauth["token"]}
         response = requests.post(url, headers=headers, data=data)
-
         if response.status_code != 200:
             self.applog.output_log("WARNING", response.json())
 

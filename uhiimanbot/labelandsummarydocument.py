@@ -66,7 +66,7 @@ class LabelandSummaryDocument:
                 if len(summarywords) > 0:
                     summary = " ".join(summarywords)
                 else:
-                    summary = label
+                    summary = ",".join(label)
                 summary_update_value = {
                     "$set": {"summary": summary, "labelstat": "added"}
                 }
