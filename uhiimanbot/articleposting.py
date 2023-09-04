@@ -280,7 +280,6 @@ class ArticlePosting:
                 )
                 # Trend Word Email Sending
                 self.checkwords_in_submitted(trendwords_contents)
-                self.trending_article_sending(trendwords_contents, self.mail_template)
                 operate_count = sum(1 for _ in trendwords_contents) + sum(
                     1 for _ in interval_contents
                 )
@@ -288,6 +287,9 @@ class ArticlePosting:
                 now = datetime.datetime.now()
                 if now.hour == wc_post_time:
                     self.create_post_wordcloud()
+                    self.trending_article_sending(
+                        trendwords_contents, self.mail_template
+                    )
 
                 endtime = time.perf_counter()
                 processtime = endtime - starttime
