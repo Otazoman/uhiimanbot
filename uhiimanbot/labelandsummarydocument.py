@@ -65,7 +65,7 @@ class LabelandSummaryDocument:
                 summarywords = self.textprocessing.get_summarize_text(description)
                 if len(summarywords) > 0:
                     summary = " ".join(summarywords)
-                elif isinstance(label,list):
+                elif len(label) > 0:
                     summary = ",".join(label)
                 else:
                     summary = title
