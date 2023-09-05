@@ -65,8 +65,10 @@ class LabelandSummaryDocument:
                 summarywords = self.textprocessing.get_summarize_text(description)
                 if len(summarywords) > 0:
                     summary = " ".join(summarywords)
-                else:
+                elif isinstance(label,list):
                     summary = ",".join(label)
+                else:
+                    summary = title
                 summary_update_value = {
                     "$set": {"summary": summary, "labelstat": "added"}
                 }
