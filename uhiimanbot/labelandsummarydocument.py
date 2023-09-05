@@ -63,9 +63,9 @@ class LabelandSummaryDocument:
                 labelupdate_value = {"$set": {"addlabel": label}}
                 self.datacrud.update_data(update_condition, labelupdate_value)
                 summarywords = self.textprocessing.get_summarize_text(description)
-                if len(summarywords) > 0:
+                if summarywords is not None and len(summarywords) > 0:
                     summary = " ".join(summarywords)
-                elif len(label) > 0:
+                elif label is not None and len(label) > 0:
                     summary = ",".join(label)
                 else:
                     summary = title
