@@ -246,17 +246,10 @@ class ArticlePosting:
         try:
             starttime = time.perf_counter()
 
-            trendword_title = "トレンドワード"
             contents_title = "RSSフィード"
             articles = self.datacrud.read_data({})
             count_record_contents = len(articles)
             if count_record_contents > 0:
-                # Get trendwords contents
-                trendwords_contents = self.trendwords.main()
-                self.summary_post(
-                    trendwords_contents, self.trendwords_template, trendword_title
-                )
-                # hatena and twitter contents
                 hatena_slack_condition = {
                     "$and": [
                         {"labelstat": "added"},
@@ -278,7 +271,8 @@ class ArticlePosting:
                 self.summary_post(
                     blogger_contents, self.contents_template, contents_title
                 )
-                # Trend Word Email Sending
+                # Get trendwords contents
+                trendwords_contents = self.trendwords.main()
                 self.checkwords_in_submitted(trendwords_contents)
                 operate_count = sum(1 for _ in trendwords_contents) + sum(
                     1 for _ in interval_contents
@@ -286,7 +280,11 @@ class ArticlePosting:
                 # If it's 23:00, create WordCloud
                 now = datetime.datetime.now()
                 if now.hour == wc_post_time:
+                    trendword_title = "トレンドワード"
                     self.create_post_wordcloud()
+                    self.summary_post(
+                      trendwords_contents, self.trendwords_template, trendword_title
+                    )
                     self.trending_article_sending(
                         trendwords_contents, self.mail_template
                     )
