@@ -147,7 +147,12 @@ class TextProcessing:
             else:
                 wordtokenizer = TextBlob(self.clean_text(words))
                 nounlist = [i for i in wordtokenizer.noun_phrases]
+
             # Analysis to produce label candidates
+            if nounlist == []:
+                result = [category]
+                return result
+
             vectorizer = TfidfVectorizer(min_df=DF_PARAM)
             x = vectorizer.fit_transform(nounlist)
             words = vectorizer.get_feature_names_out()
