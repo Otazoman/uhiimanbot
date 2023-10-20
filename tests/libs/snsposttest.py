@@ -92,12 +92,7 @@ class TestSnsPosting(TestCase):
             "poststatus": "DELETED",
             "dupkey": "None",
         }
-
         print("\n-->> Bluesky")
-        # 認証エラー
-        # print("-->> NonAuth")
-        # result = self.arthiclepost.post_bluesky(postword, url, tags)
-        # self.assertEqual(result.status_code, self.responsecode)
         # 通常投稿
         print("-->> Auth not image")
         result = SnsPost("prod").post_bluesky(
@@ -112,6 +107,10 @@ class TestSnsPosting(TestCase):
         result = SnsPost("prod").post_bluesky(
             postword=postword, tags=tags, imagepath=image_filepath
         )
+        # 認証エラー
+        print("-->> NonAuth")
+        with self.assertRaises(Exception, msg="bluesky post exception!!"):
+            result = self.arthiclepost.post_bluesky(postword, url, tags)
 
     """ Hatena単独投稿 """
 

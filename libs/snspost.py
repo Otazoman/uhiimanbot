@@ -142,21 +142,38 @@ class SnsPost:
     ):
         try:
             # post apis
-            bluesky = Client()
+            bluesky = Client("https://bsky.social/xrpc")
             bluesky.login(
                 self.blueskyauth["user_name"], self.blueskyauth["app_password"]
             )
+            bluesky.timeout = 120
 
             # Building post content
             if imagepath:
-                
+                bluesky_images = []
                 with open(imagepath, "rb") as image_file:
                     image_data = image_file.read()
                 media_data = image_data
-                text = (postword + "\r\n" + f"#{tags[0]}",)
+                text = f"{postword}\r\n#{tags[0]}"
 
-                req = bluesky.send_image(text=text, image=media_data, image_alt=tags[0])
-                print(req)
+                bluesky.send_image(text=text, image=media_data, image_alt=tags[0])
+
+                # upload = bluesky.com.atproto.repo.upload_blob(media_data)
+                # bluesky_images.append(
+                #     models.AppBskyEmbedImages.Image(alt=tags[0], image=upload.blob)
+                # )
+                # bluesky_embed = models.AppBskyEmbedImages.Main(images=bluesky_images)
+                # bluesky.com.atproto.repo.create_record(
+                #     models.ComAtprotoRepoCreateRecord.Data(
+                #         repo=bluesky.me.did,
+                #         collection=models.ids.AppBskyFeedPost,
+                #         record=models.AppBskyFeedPost.Main(
+                #             createdAt=datetime.now().isoformat(),
+                #             text=text,
+                #             embed=bluesky_embed,
+                #         ),
+                #     )
+                # )
 
             else:
                 title = content["title"]
@@ -168,8 +185,7 @@ class SnsPost:
                         title=title, description=description, uri=url
                     )
                 )
-                req = bluesky.send_post(content, embed=embed_external)
-                print(req)
+                res = bluesky.send_post(content, embed=embed_external)
 
         except Exception:
             self.applog.output_log(self.loglevel, traceback.format_exc())
