@@ -54,7 +54,7 @@ class TestSnsPosting(TestCase):
         print("\n-->> Twitter")
         # 認証エラー
         print("-->> NonAuth")
-        result = self.arthiclepost.post_hateb(postword, url, tags)
+        result = self.arthiclepost.post_twitter(postword, url, tags)
         self.assertEqual(result.status_code, self.responsecode)
 
         # 通常投稿
@@ -68,6 +68,50 @@ class TestSnsPosting(TestCase):
         tags = ["WordCloud"]
         print("-->> Auth attatch image")
         result = SnsPost("prod").post_twitter(postword, url, tags, image_filepath)
+
+    """ Bluesky単独投稿 """
+
+    def test_post_bluesky(self):
+        print("Post Bluesky-->>")
+        postword = "BlueskyうひーメモTEST"
+        url = "https://google.co.jp"
+        tags = ["BulueskyTEST", "BulueskyTEST2", "BulueskyTEST3"]
+        content = {
+            "name": "気になる、記になる…",
+            "category": "IT",
+            "title": "｢Pixel 8｣と｢Pixel 8 Pro｣のディスプレイの仕様の詳細が明らかに",
+            "description": "Googleは今秋に次期フラッグシップスマホ Pixel  シリーズを投入する予定ですが 本日 Android Authorityがその Pixel  シリーズのディスプレイの仕様に関する詳細を報じています 今回の   ",
+            "link": "https://taisy0.com/2023/06/18/173142.html",
+            "orgpublished": "Sun, 18 Jun 2023 02:17:48 +0000",
+            "published": "2023-06-18 02:17:48",
+            "updated": "2023-06-18 02:17:48",
+            "_id": "11110000",
+            "addlabel": ["pixel", "シリーズ", "ディスプレイ"],
+            "summary": "pixel,シリーズ,ディスプレイ",
+            "labelstat": "added",
+            "poststatus": "DELETED",
+            "dupkey": "None",
+        }
+
+        print("\n-->> Bluesky")
+        # 認証エラー
+        # print("-->> NonAuth")
+        # result = self.arthiclepost.post_bluesky(postword, url, tags)
+        # self.assertEqual(result.status_code, self.responsecode)
+        # 通常投稿
+        print("-->> Auth not image")
+        result = SnsPost("prod").post_bluesky(
+            postword=postword, url=url, tags=tags, content=content
+        )
+        # 画像付き投稿
+        image_filepath = (
+            "/home/matarain/pythonapp/uhiimanbot/tests/testmaterials/images/image3.png"
+        )
+        tags = ["WordCloud"]
+        print("-->> Auth attatch image")
+        result = SnsPost("prod").post_bluesky(
+            postword=postword, tags=tags, imagepath=image_filepath
+        )
 
     """ Hatena単独投稿 """
 

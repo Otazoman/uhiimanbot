@@ -10,6 +10,7 @@ import xml.etree.ElementTree as ET
 import flickrapi
 import httplib2
 import requests
+from atproto import Client, models
 from googleapiclient.discovery import build
 from oauth2client import file, tools
 from oauth2client.client import OAuth2WebServerFlow
@@ -32,6 +33,7 @@ class SnsPost:
         self.applog = ApplicationLogs(name, logmode, logpath)
         self.datacrud = Datacrud(mode, destinationtype)
         self.twitterauth = self.config.get_snsauth("twitter")
+        self.blueskyauth = self.config.get_snsauth("bluesky")
         self.hatenaauth = self.config.get_snsauth("hatena")
         self.flickrauth = self.config.get_snsauth("flickr")
         self.bloggerauth = self.config.get_snsauth("blogger")
@@ -71,7 +73,7 @@ class SnsPost:
             self.applog.output_log(self.loglevel, traceback.format_exc())
             raise Exception("localtest post exception!!")
 
-    """ Posted Twitter"""
+    """ Posted Twitter """
 
     def post_twitter(
         self,
@@ -127,6 +129,51 @@ class SnsPost:
             raise Exception("twitter post exception!!")
         finally:
             twitter.close()
+
+    """ Posted Bluesky """
+
+    def post_bluesky(
+        self,
+        postword: str = None,
+        url: str = None,
+        tags: list = None,
+        content: object = None,
+        imagepath: str = None,
+    ):
+        try:
+            # post apis
+            bluesky = Client()
+            bluesky.login(
+                self.blueskyauth["user_name"], self.blueskyauth["app_password"]
+            )
+
+            # Building post content
+            if imagepath:
+                
+                with open(imagepath, "rb") as image_file:
+                    image_data = image_file.read()
+                media_data = image_data
+                text = (postword + "\r\n" + f"#{tags[0]}",)
+
+                req = bluesky.send_image(text=text, image=media_data, image_alt=tags[0])
+                print(req)
+
+            else:
+                title = content["title"]
+                description = content["description"]
+                tagstr = "\n".join(["#" + t for t in tags])
+                content = postword + "\r\n" + tagstr
+                embed_external = models.AppBskyEmbedExternal.Main(
+                    external=models.AppBskyEmbedExternal.External(
+                        title=title, description=description, uri=url
+                    )
+                )
+                req = bluesky.send_post(content, embed=embed_external)
+                print(req)
+
+        except Exception:
+            self.applog.output_log(self.loglevel, traceback.format_exc())
+            raise Exception("bluesky post exception!!")
 
     """ Posted HatenaBookmark """
 

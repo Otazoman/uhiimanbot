@@ -101,6 +101,11 @@ class Configreader:
                         "token": snsauth_config[snsname]["token"],
                         "token_secret": snsauth_config[snsname]["token_secret"],
                     }
+                case "bluesky":
+                    result = {
+                        "user_name": snsauth_config[snsname]["user_name"],
+                        "app_password": snsauth_config[snsname]["app_password"],
+                    }
                 case "flickr":
                     result = {
                         "secret": snsauth_config[snsname]["secret"],

@@ -4,11 +4,11 @@ from unittest import TestCase
 
 import mongomock
 import pymongo
+import testdata.database_test_data as database_test_data
 
 sys.path.append("..")
 current_dir = pathlib.Path(__file__).resolve().parent
 sys.path.append(str(current_dir) + "/../..")
-import database_test_data
 from libs.databases.mongooperate import MongoOperate
 
 

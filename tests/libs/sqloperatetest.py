@@ -3,12 +3,12 @@ import sys
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
+import testdata.database_test_data as database_test_data
 from sqlalchemy import Integer, String
 
 sys.path.append("..")
 current_dir = pathlib.Path(__file__).resolve().parent
 sys.path.append(str(current_dir) + "/../..")
-import database_test_data
 from libs.databases.sqloperate import MySQLDatabase, PostgreSQLDatabase, SQLiteDatabase
 
 
