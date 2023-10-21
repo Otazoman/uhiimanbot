@@ -110,7 +110,7 @@ class TestSnsPosting(TestCase):
         # 認証エラー
         print("-->> NonAuth")
         with self.assertRaises(Exception, msg="bluesky post exception!!"):
-            result = self.arthiclepost.post_bluesky(postword, url, tags)
+            self.arthiclepost.post_bluesky(postword, url, tags)
 
     """ Hatena単独投稿 """
 

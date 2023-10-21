@@ -3,6 +3,7 @@ import datetime
 import json
 import os
 import re
+import time
 import traceback
 import urllib
 import xml.etree.ElementTree as ET
@@ -10,7 +11,7 @@ import xml.etree.ElementTree as ET
 import flickrapi
 import httplib2
 import requests
-from atproto import Client, models
+from atproto import Client, exceptions, models
 from googleapiclient.discovery import build
 from oauth2client import file, tools
 from oauth2client.client import OAuth2WebServerFlow
@@ -37,6 +38,8 @@ class SnsPost:
         self.hatenaauth = self.config.get_snsauth("hatena")
         self.flickrauth = self.config.get_snsauth("flickr")
         self.bloggerauth = self.config.get_snsauth("blogger")
+        self.MAX_RETRIES = 5
+        self.RETRY_DELAY = 1
 
     """ Posted localtest twitter and hatena """
 
@@ -146,35 +149,27 @@ class SnsPost:
             bluesky.login(
                 self.blueskyauth["user_name"], self.blueskyauth["app_password"]
             )
-            bluesky.timeout = 120
-
+            bluesky.timeout = 300
             # Building post content
             if imagepath:
-                bluesky_images = []
                 with open(imagepath, "rb") as image_file:
                     image_data = image_file.read()
-                media_data = image_data
                 text = f"{postword}\r\n#{tags[0]}"
-
-                bluesky.send_image(text=text, image=media_data, image_alt=tags[0])
-
-                # upload = bluesky.com.atproto.repo.upload_blob(media_data)
-                # bluesky_images.append(
-                #     models.AppBskyEmbedImages.Image(alt=tags[0], image=upload.blob)
-                # )
-                # bluesky_embed = models.AppBskyEmbedImages.Main(images=bluesky_images)
-                # bluesky.com.atproto.repo.create_record(
-                #     models.ComAtprotoRepoCreateRecord.Data(
-                #         repo=bluesky.me.did,
-                #         collection=models.ids.AppBskyFeedPost,
-                #         record=models.AppBskyFeedPost.Main(
-                #             createdAt=datetime.now().isoformat(),
-                #             text=text,
-                #             embed=bluesky_embed,
-                #         ),
-                #     )
-                # )
-
+                while True:
+                    retries = 0
+                    try:
+                        res = bluesky.send_image(
+                            text=text, image=image_data, image_alt=tags[0]
+                        )
+                        break
+                    except exceptions.InvokeTimeoutError:
+                        if retries < self.MAX_RETRIES:
+                            retries += 1
+                            self.RETRY_DELAY
+                            self.applog.output_log(
+                                "INFO", "bluesky TimeoutError occurs"
+                            )
+                            time.sleep(self.RETRY_DELAY)
             else:
                 title = content["title"]
                 description = content["description"]
@@ -186,7 +181,6 @@ class SnsPost:
                     )
                 )
                 res = bluesky.send_post(content, embed=embed_external)
-
         except Exception:
             self.applog.output_log(self.loglevel, traceback.format_exc())
             raise Exception("bluesky post exception!!")

@@ -75,6 +75,9 @@ class ArticlePosting:
                             tagstr = " ".join(["#" + t for t in tags])
                             slack_content = f"{postword}\n{url}\n{tagstr}"
                             self.sendmessage.send_message_slack(slack_content)
+                            self.snspost.post_bluesky(
+                                postword=postword, url=url, tags=tags, content=content
+                            )
                         # Rewrite status
                         statusreplace = {"$set": {"poststatus": "POSTED"}}
                         self.datacrud.update_data(update_condition, statusreplace)
@@ -235,6 +238,9 @@ class ArticlePosting:
                 )
                 for wordcloudfile in wordcloudfiles:
                     self.snspost.post_twitter(title, url, tag, wordcloudfile)
+                    self.snspost.post_bluesky(
+                        postword=title, tags=tag, imagepath=wordcloudfile
+                    )
             return True
         except Exception:
             self.applog.output_log(self.loglevel, traceback.format_exc())
@@ -283,7 +289,7 @@ class ArticlePosting:
                     trendword_title = "トレンドワード"
                     self.create_post_wordcloud()
                     self.summary_post(
-                      trendwords_contents, self.trendwords_template, trendword_title
+                        trendwords_contents, self.trendwords_template, trendword_title
                     )
                     self.trending_article_sending(
                         trendwords_contents, self.mail_template
