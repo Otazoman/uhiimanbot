@@ -70,14 +70,18 @@ class ArticlePosting:
                         if self.mode == "test" or self.destinationtype == "text":
                             self.snspost.post_text_microblog(postword, url, tags)
                         else:
-                            # Post Hatena and Slack
-                            self.snspost.post_hateb(postword, url, tags)
-                            tagstr = " ".join(["#" + t for t in tags])
-                            slack_content = f"{postword}\n{url}\n{tagstr}"
-                            self.sendmessage.send_message_slack(slack_content)
-                            self.snspost.post_bluesky(
-                                postword=postword, url=url, tags=tags, content=content
-                            )
+                            try:
+                                # Post Hatena and Slack and bluesky
+                                self.snspost.post_hateb(postword, url, tags)
+                                tagstr = " ".join(["#" + t for t in tags])
+                                slack_content = f"{postword}\n{url}\n{tagstr}"
+                                self.sendmessage.send_message_slack(slack_content)
+                                self.snspost.post_bluesky(
+                                    postword=postword, url=url, tags=tags, content=content
+                                )
+                            except:
+                                self.applog.output_log(self.loglevel, f"{traceback.format_exc()}:{slack_content}")
+                                continue
                         # Rewrite status
                         statusreplace = {"$set": {"poststatus": "POSTED"}}
                         self.datacrud.update_data(update_condition, statusreplace)
