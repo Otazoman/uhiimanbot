@@ -52,6 +52,14 @@ echo "clear work data"
 for file in "${files[@]}"; do
     echo -n > "$file"
 done
+
+echo "clear database"
+mongosh --quiet --eval '
+    use test_cr_tohonokai;
+    db.auth("testtohonokai", "password");
+    db.rss_article.remove({});
+'
+
 echo "done"
 
 end_time=$(date +%s)
