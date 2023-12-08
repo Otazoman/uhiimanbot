@@ -76,9 +76,9 @@ class ArticlePosting:
                                 tagstr = " ".join(["#" + t for t in tags])
                                 slack_content = f"{postword}\n{url}\n{tagstr}"
                                 self.sendmessage.send_message_slack(slack_content)
-                                self.snspost.post_bluesky(
-                                    postword=postword, url=url, tags=tags, content=content
-                                )
+                                #self.snspost.post_bluesky(
+                                #    postword=postword, url=url, tags=tags, content=content
+                                #)
                             except:
                                 self.applog.output_log(self.loglevel, f"{traceback.format_exc()}:{slack_content}")
                                 continue
