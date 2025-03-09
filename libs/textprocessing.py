@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 import MeCab
 import neologdn
 import nltk
-from ja_stopword_filter import JaStopwordFilter
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sumy.nlp.tokenizers import Tokenizer
