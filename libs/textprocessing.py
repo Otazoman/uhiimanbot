@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import MeCab
 import neologdn
 import nltk
+from ja_stopword_filter import JaStopwordFilter
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sumy.nlp.tokenizers import Tokenizer
@@ -49,7 +50,7 @@ class TextProcessing:
 
     def get_japanese_stopwords(self) -> list:
         try:
-            url = "http://svn.sourceforge.jp/svnroot/slothlib/CSharp/Version1/SlothLib/NLP/Filter/StopWord/word/Japanese.txt"
+            url = "https://raw.githubusercontent.com/stopwords-iso/stopwords-ja/master/stopwords-ja.txt"
             response = urllib.request.urlopen(url)
             stopwords = response.read().decode("utf-8")
             result = stopwords.splitlines()

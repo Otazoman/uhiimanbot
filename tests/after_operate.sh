@@ -65,3 +65,4 @@ echo "done"
 end_time=$(date +%s)
 execution_time=$((end_time - start_time))
 echo "Script execution time: $execution_time seconds"
+coverage report
